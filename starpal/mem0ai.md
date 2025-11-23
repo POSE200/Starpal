@@ -1,3 +1,9 @@
+<!--
+This file includes excerpts from the Mem0 project (https://github.com/mem0ai/mem0),
+Copyright 2025 Mem0 authors, licensed under Apache License 2.0.
+Original LICENSE: https://github.com/mem0ai/mem0/blob/main/LICENSE
+-->
+
 1.实例化客户端
 ```python
 import os
@@ -119,3 +125,4 @@ agent_id
 run_id
 metadata (as JSON string)
 元数据 （作为 JSON 字符串）
+
