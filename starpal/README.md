@@ -168,8 +168,8 @@ We now have a paper you can cite:
 ## ⚖️ License
 
 Apache 2.0 — see the [LICENSE](LICENSE) file for details.
-<!--
+
 This file includes excerpts from the Mem0 project (https://github.com/mem0ai/mem0),
 Copyright 2025 Mem0 authors, licensed under Apache License 2.0.
 Original LICENSE: https://github.com/mem0ai/mem0/blob/main/LICENSE
--->
+
