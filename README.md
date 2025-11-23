@@ -38,6 +38,8 @@ StarPal - AI Intelligent Chat Assistant Based on Long-Term Memory
 <img width="385" height="184" alt="image" src="https://github.com/user-attachments/assets/1e16e250-180f-49ab-a629-5b1dee356247" />
 
 图1 市场规模预测
+
+
 然而，当前市场上的聊天工具却难以满足人们对温暖、贴心且持续陪伴的需求。它们大多存在情感回应生硬的问题，无法真正理解用户的情绪；缺乏长期记忆，不能连贯地与用户交流过往话题；也没有个性化交互，难以根据不同用户的特点提供专属陪伴。在这样的背景下，社会中情感陪伴的缺口愈发明显。根据Reportify报告实际数据显示，2021年中国AIGC市场中与情感陪伴相关的规模为19亿元。以150%的年复合增长率推算，到2025年这一市场规模将达到约38亿元；而随着技术迭代与需求释放，到2028年市场规模有望进一步增长至744亿元，短短7年间将实现近40倍的规模扩张，直观反映出AI情感陪伴领域的爆发式增长潜力。而 “星伴” 这类具备深度情感识别与个性化陪伴能力的智能助手，正好填补了这一空白，拥有极为广阔的应用空间，有望为众多渴望情感陪伴的人们带来新的希望与慰藉。
 2.3 AI 技术的快速发展奠定基础
 以 AI 大模型为代表的人工智能技术近年来取得突破性进展，自然语言处理、情感分析、长期记忆系统构建等技术日趋成熟，为智能聊天陪伴助手的开发提供了坚实的技术支撑。这些技术的发展，使得机器能够更精准地理解人类情感、更自然地进行语言交互、更高效地存储和调用用户相关信息，为 “星伴” 实现个性化陪伴功能创造了可能，推动 AI 技术从工具属性向情感交互属性延伸。
@@ -81,7 +83,8 @@ StarPal - AI Intelligent Chat Assistant Based on Long-Term Memory
 <img width="416" height="151" alt="image" src="https://github.com/user-attachments/assets/539da024-9ae2-4ab4-b1a5-7e079313cd17" />
 
  图2记忆添加
-	
+
+
 用户输入：“我骗你的，我其实不爱打篮球” → 记忆库中喜欢打篮球条目消失。
 
 
@@ -100,7 +103,9 @@ StarPal - AI Intelligent Chat Assistant Based on Long-Term Memory
 
 <img width="416" height="165" alt="image" src="https://github.com/user-attachments/assets/74bbc143-c5cc-4a40-9572-4ba1b2ad89ac" />
 
+
 图4 记忆重要性分级
+
 （2）功能逻辑拆解：
 1）信息类型识别：
 通过 实体抽取模型 识别 “生日” 为 人生节点类核心信息（关联身份、情感需求），而 “喜欢吃饭” 属于 日常偏好类信息；
@@ -117,6 +122,8 @@ StarPal - AI Intelligent Chat Assistant Based on Long-Term Memory
 <img width="416" height="68" alt="image" src="https://github.com/user-attachments/assets/4bc48990-f735-48ab-9645-e448c93a5a18" />
 
 图5 根据记忆推测用户爱好
+
+
 (2)功能逻辑拆解：
 当用户询问爱好时，系统会先检索记忆库中的关键线索（如"喜欢迈克尔·乔丹"），通过人物-兴趣关联模型（乔丹→篮球）生成推测，并用星级（一般/重要）和颜色（红/蓝）直观标注记忆的可信度。回答时会明确引用记忆依据（"你提过喜欢乔丹"），并以提问形式（"是这样吗？"）确认推测准确性。用户确认后，系统会强化该记忆权重；若否定则自动降权并记录修正，同时触发追问（"那你更喜欢乔丹的哪方面？"）来完善用户画像。整个过程通过动态调整的星级和颜色反馈记忆重要性的实时变化。
 (3)关联信息检索：
@@ -134,6 +141,8 @@ StarPal - AI Intelligent Chat Assistant Based on Long-Term Memory
 <img width="367" height="83" alt="image" src="https://github.com/user-attachments/assets/2aae4468-28bc-418c-a539-e52ee3b9f522" />
 
 图6 记忆更新
+
+
 （二）个性化功能
 1.核心价值
  基于用户画像与实时状态，动态调整交互风格、内容深度与呈现形式，提供高度定制化的沟通体验。
@@ -158,12 +167,16 @@ StarPal - AI Intelligent Chat Assistant Based on Long-Term Memory
 <img width="415" height="228" alt="image" src="https://github.com/user-attachments/assets/7e03465b-c078-4882-aacd-ac8d960183b3" />
 
 图7 基础界面展示
+
+
 3.3.2.新对话创建
 用户能创建新对话更新交流场景。用户可以通过该功能更新与AI助手的对话，无需在历史对话中继续延伸，适用于用户想切换话题、探讨新内容的场景。例如，当用户之前在聊兴趣爱好，现在想询问学习相关问题时，用户就可以创建新对话，避免不同话题在同一对话中混淆。
 
 <img width="404" height="227" alt="image" src="https://github.com/user-attachments/assets/514f51ca-ecd4-4d6e-97ec-6cc3a0fde407" />
 
 图8 新用户对话创建展示
+
+
 3.3.3.头像切换以及可切换主题
 此功能满足了用户的个性化视觉需求，让界面更符合个人喜好。 
 头像切换：用户可以根据自己的偏好更换用户自己的头像，由用户从自己的文件选择喜爱的头像，通过更换头像，能让用户更具“个性化形象”，增强用户对AI助手的认同感。 
@@ -173,6 +186,8 @@ StarPal - AI Intelligent Chat Assistant Based on Long-Term Memory
 <img width="168" height="176" alt="image" src="https://github.com/user-attachments/assets/bd099f4c-40ad-4e80-82e5-d5a8e789f271" />
 
 图9 用户界面注销
+
+
 3.3.4.自定义部分功能
 自定义部分功能让AI助手更贴合用户的个人情况和使用需求，包括个性化设置，指令功能，长期记忆功能。
 1个性化设置
@@ -182,12 +197,16 @@ StarPal - AI Intelligent Chat Assistant Based on Long-Term Memory
 <img width="416" height="257" alt="image" src="https://github.com/user-attachments/assets/e0dbe9df-f288-410f-a1cc-3f9ce73fe65d" />
 
 图10 个性化设计
+
+
 2指令功能
 指令功能可调整 AI 助手的行为和回应方式。用户可以通过该功能输入具体的指令内容，设定 AI 助手在特定场景下的回应风格（如更简洁或更详细）。同时软件也提供了快捷选择模板，供用户选择。
 
 <img width="315" height="231" alt="image" src="https://github.com/user-attachments/assets/1f8a2c4e-0b79-4f92-91aa-4ef4c0b2bc56" />
 
 图11 个性化设计
+
+
 3长期记忆功能
 “星伴”的长期记忆系统突破了传统AI“会话即忘”的交互限制，以“持续沉淀-智能治理-精准反哺”为核心逻辑，实现了关键突破。以下表格清晰呈现了“星伴”智能记忆系统与传统AI记忆模式的显著区别：
 
@@ -202,6 +221,8 @@ StarPal - AI Intelligent Chat Assistant Based on Long-Term Memory
 <img width="416" height="328" alt="image" src="https://github.com/user-attachments/assets/23567bae-6efb-4be8-8798-1999217386a5" />
 
 图12 长期记忆功能管理界面
+
+
 3.4 技术架构与实现方案
 3.4.1 核心技术支撑
 1.长期记忆技术
