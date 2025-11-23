@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>星伴 - 你的AI陪伴</title>
+  <link rel="stylesheet" href="assets/starpal-style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- 背景装饰 -->
+  <div class="background-decoration">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+  </div>
+
+  <div class="flip-card" id="authCard">
+    <div class="flip-card-inner" id="cardInner">
+      <!-- 登录卡片 -->
+      <div class="flip-card-front starpal-card">
+        <div class="card-header">
+          <h1>登录</h1>
+          <p class="welcome-text">欢迎使用 StarPal</p>
+        </div>
+        <form id="loginForm" class="starpal-form active">
+          <div class="form-content">
+            <div class="form-inputs">
+              <div class="input-group">
+                <div class="input-wrapper">
+                  <i class="ri-mail-line input-icon"></i>
+                  <input class="starpal-input" name="email" id="login-username" placeholder="Email or Username" type="text" required autocomplete="username">
+                </div>
+                <span id="login-email-err" class="error-text"></span>
+              </div>
+              
+              <div class="input-group">
+                <div class="input-wrapper">
+                  <i class="ri-lock-line input-icon"></i>
+                  <input class="starpal-input" name="password" id="login-password" placeholder="Password" type="password" required autocomplete="current-password">
+                  <button type="button" class="password-toggle" id="loginPasswordToggle">
+                    <i class="ri-eye-off-line"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="form-options">
+                <a href="#" class="forgot-password">忘记密码？</a>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button class="starpal-btn primary-btn" type="submit">
+                <span>登录</span>
+                <i class="ri-arrow-right-line"></i>
+              </button>
+
+              <div class="starpal-form-link">
+                还没有账号？ <a href="#" id="flipToRegister">立即注册</a>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      
+      <!-- 注册卡片 -->
+      <div class="flip-card-back starpal-card">
+        <div class="card-header">
+          <h1>注册</h1>
+          <p>创建你的 StarPal 账户</p>
+        </div>
+        <form id="registerForm" class="starpal-form">
+          <div class="form-content">
+            <div class="form-inputs">
+              <div class="input-group">
+                <div class="input-wrapper">
+                  <i class="ri-user-line input-icon"></i>
+                  <input class="starpal-input" placeholder="姓名" id="register-name" type="text" required>
+                </div>
+              </div>
+
+              <div class="input-group">
+                <div class="input-wrapper">
+                  <i class="ri-mail-line input-icon"></i>
+                  <input class="starpal-input" name="email" id="register-username" placeholder="Email" type="text" required autocomplete="username">
+                </div>
+                <span id="register-email-err" class="error-text"></span>
+              </div>
+
+              <div class="input-group">
+                <div class="input-wrapper">
+                  <i class="ri-lock-line input-icon"></i>
+                  <input class="starpal-input" name="password" id="register-password" placeholder="Password" type="password" required autocomplete="new-password">
+                  <button type="button" class="password-toggle" id="registerPasswordToggle">
+                    <i class="ri-eye-off-line"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="input-group">
+                <div class="input-wrapper">
+                  <i class="ri-lock-line input-icon"></i>
+                  <input class="starpal-input" id="register-confirm" placeholder="Confirm Password" type="password" required autocomplete="new-password">
+                  <button type="button" class="password-toggle" id="confirmPasswordToggle">
+                    <i class="ri-eye-off-line"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="form-options agree-terms">
+                <label class="remember-me">
+                  <input type="checkbox" id="agreeTerms" required>
+                  <span class="checkmark"></span>
+                  我同意 <a href="#">服务条款</a> 和 <a href="#">隐私政策</a>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button class="starpal-btn primary-btn" type="submit">
+                <span>创建账户</span>
+                <i class="ri-arrow-right-line"></i>
+              </button>
+
+              <div class="starpal-form-link">
+                已有账号？ <a href="#" id="flipToLogin">立即登录</a>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <footer class="starpal-footer">
+    登录即表示您同意我们的 <a href="#">服务条款</a> 和 <a href="#">隐私政策</a>
+  </footer>
+  
+  <!-- 引入模块化JavaScript文件 -->
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,2723 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>星伴 - 你的AI陪伴</title>
+  <link rel="stylesheet" href="assets/starpal-chat-style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+  <style>
+    /* 深色主题下菜单和主区域 */
+    [data-theme='dark'] .avatar-menu {
+      background: #18191a !important;
+      color: #f5f6fa !important;
+    }
+    [data-theme='dark'] .avatar-menu-item {
+      color: #f5f6fa !important;
+    }
+    [data-theme='dark'] .avatar-menu-item i {
+      color: #f5f6fa !important;
+    }
+    [data-theme='dark'] .avatar-menu-item:hover {
+      background: #18191a !important;
+      color: #fff !important;
+    }
+    [data-theme='dark'] .avatar-menu-item#logoutBtn {
+      color: #e74c3c !important;
+    }
+    /* 浅色主题下菜单和主区域 */
+    .avatar-menu {
+      background: #f7f8fa !important;
+      color: #222 !important;
+    }
+    .avatar-menu-item {
+      color: #222 !important;
+    }
+    .avatar-menu-item i {
+      color: #222 !important;
+    }
+    .avatar-menu-item:hover {
+      background: #f7f8fa !important;
+      color: #2563eb !important;
+    }
+    .avatar-menu-item#logoutBtn {
+      color: #e74c3c !important;
+    }
+    /* 聊天主区域、AI气泡主题适配 */
+    body, .chat-container, .chat-main, .chat-header, .chat-body, .chat-footer, .chat-history-panel, .chat-welcome {
+      background: #f7f8fa;
+      color: #222;
+      transition: background 0.3s, color 0.3s;
+    }
+    .chat-main {
+      background: #f7f8fa;
+      border-radius: 0; /* 移除圆角 */
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+      margin: 0; /* 移除上下边距 */
+    }
+    .chat-header, .chat-footer {
+      background: #f7f8fa;
+    }
+    .chat-bubble.ai {
+      background: #f7f8fa !important;
+      color: #222 !important;
+      border: 1px solid #e0e0e0 !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    /* 用户气泡蓝色不变 */
+    .chat-bubble.user {
+      background: #e8f0fe !important;
+      color: #222 !important;
+      border: 1px solid #bcd6fa !important;
+    }
+    [data-theme='dark'] body,
+    [data-theme='dark'] .chat-container,
+    [data-theme='dark'] .chat-main,
+    [data-theme='dark'] .chat-header,
+    [data-theme='dark'] .chat-body,
+    [data-theme='dark'] .chat-footer,
+    [data-theme='dark'] .chat-history-panel,
+    [data-theme='dark'] .chat-welcome {
+      background: #18191a !important;
+      color: #f5f6fa !important;
+    }
+    [data-theme='dark'] .chat-main {
+      background: #18191a !important;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+    }
+    [data-theme='dark'] .chat-header, [data-theme='dark'] .chat-footer {
+      background: #18191a !important;
+    }
+    [data-theme='dark'] .chat-bubble.ai {
+      background: #18191a !important;
+      color: #f5f6fa !important;
+      border: 1.5px solid #444 !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    }
+    [data-theme='dark'] .chat-bubble.user {
+      background: #3b82f6 !important;
+      color: #fff !important;
+      border: 1px solid #2563eb !important;
+    }
+    /* 输入框主题适配 */
+    .chat-input {
+      border: none;
+      background: #f7f8fa;
+      color: #222;
+      border-radius: 16px; /* 增加圆角弧度 */
+      padding: 16px 20px; /* 增加内边距使其更加宽敞 */
+      font-size: 16px;
+      transition: all 0.3s ease; /* 平滑过渡效果 */
+      height: 120px; /* 将高度增加到三倍 */
+      resize: none; /* 禁止用户调整大小 */
+      overflow-y: auto; /* 依然允许滚动，但自定义滚动条样式 */
+      width: 100%; /* 确保宽度填满容器 */
+      line-height: 1.5; /* 增加行高 */
+      outline: none; /* 去除焦点轮廓 */
+      margin-right: 40px; /* 给发送按钮留出空间 */
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03) inset; /* 内阴影效果 */
+      scrollbar-width: thin; /* Firefox */
+      scrollbar-color: transparent transparent; /* Firefox */
+    }
+    
+    /* 隐藏Webkit浏览器(Chrome、Safari等)的滚动条 */
+    .chat-input::-webkit-scrollbar {
+      width: 4px; /* 非常窄的宽度 */
+    }
+    
+    .chat-input::-webkit-scrollbar-track {
+      background: transparent; /* 轨道透明 */
+    }
+    
+    .chat-input::-webkit-scrollbar-thumb {
+      background-color: transparent; /* 默认状态下滑块透明 */
+      border-radius: 20px;
+    }
+    
+    /* 鼠标悬停时才显示滚动条 */
+    .chat-input:hover::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.1); /* 悬停时显示淡灰色滑块 */
+    }
+    [data-theme='dark'] .chat-input {
+      border: none;
+      background: #18191a !important;
+      color: #f5f6fa !important;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2) inset !important; /* 深色模式下加深内阴影 */
+      scrollbar-color: transparent transparent; /* Firefox */
+    }
+    
+    /* 深色模式下悬停时显示滚动条 */
+    [data-theme='dark'] .chat-input:hover::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 255, 255, 0.1); /* 深色模式下悬停时显示浅色滑块 */
+    }
+    
+    /* 输入容器样式 */
+    .input-container {
+      display: flex;
+      align-items: flex-start; /* 将对齐方式改为顶部对齐 */
+      background: #f7f8fa;
+      border-radius: 18px; /* 增加圆角弧度 */
+      padding: 0 5px;
+      transition: all 0.3s ease; /* 平滑过渡效果 */
+      position: relative; /* 添加相对定位，用于按钮的绝对定位 */
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04); /* 添加微妙的阴影 */
+      border: 1px solid rgba(0,0,0,0.03); /* 添加非常淡的边框 */
+    }
+    [data-theme='dark'] .input-container {
+      background: #18191a !important;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15) !important; /* 深色模式下加深阴影 */
+      border: 1px solid rgba(255,255,255,0.05) !important; /* 深色模式下的微妙边框 */
+    }
+    
+    /* 聊天区域样式 */
+    .chat-body {
+      padding-bottom: 140px; /* 为更高的输入框预留空间 */
+      overflow-y: auto;
+      scroll-behavior: smooth; /* 平滑滚动效果 */
+    }
+    
+    /* 聊天页脚样式 */
+    .chat-footer {
+      padding: 18px 20px 20px 20px; /* 增加内边距 */
+      position: relative;
+      border-top: 1px solid rgba(0, 0, 0, 0.03); /* 添加非常淡的分隔线 */
+    }
+    
+    [data-theme='dark'] .chat-footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.03); /* 深色模式下的分隔线 */
+    }
+    
+    /* 输入提示样式 */
+    .input-hint {
+      position: absolute;
+      right: 60px;
+      bottom: 10px;
+      font-size: 12px;
+      color: #9ca3af;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      pointer-events: none;
+      user-select: none;
+      transition: opacity 0.2s ease;
+      opacity: 1;
+    }
+    
+    [data-theme='dark'] .input-hint {
+      color: #6b7280;
+    }
+    
+    /* 发送按钮样式 */
+    .send-btn {
+      background: #2563eb;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      border-radius: 50%; /* 完全圆形 */
+      position: absolute; /* 使用绝对定位 */
+      right: 12px; /* 微调位置 */
+      bottom: 12px; /* 微调位置 */
+      width: 40px; /* 固定宽度 */
+      height: 40px; /* 固定高度 */
+      transition: all 0.2s ease; /* 平滑过渡 */
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3); /* 带有颜色的阴影 */
+    }
+    .send-btn:hover {
+      background: #1d4ed8; /* 稍深一点的蓝色 */
+      transform: translateY(-2px); /* 悬停时轻微上浮 */
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4); /* 悬停时加深阴影 */
+    }
+    .send-btn:active {
+      transform: translateY(0); /* 点击时回到原位 */
+      box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3); /* 点击时减小阴影 */
+    }
+    [data-theme='dark'] .send-btn {
+      background: #3b82f6; /* 深色模式下稍亮的蓝色 */
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    }
+    [data-theme='dark'] .send-btn:hover {
+      background: #2563eb;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
+    [data-theme='dark'] .send-btn:active {
+      box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+    }
+    
+    /* 停止按钮样式 */
+    .stop-btn {
+      background: #e53e3e;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      border-radius: 50%; /* 完全圆形 */
+      position: absolute; /* 使用绝对定位 */
+      right: 12px; /* 靠右 */
+      bottom: 12px; /* 靠下 */
+      width: 40px; /* 固定宽度 */
+      height: 40px; /* 固定高度 */
+      transition: all 0.2s ease; /* 平滑过渡 */
+      box-shadow: 0 2px 8px rgba(229, 62, 62, 0.3); /* 带有颜色的阴影 */
+    }
+    .stop-btn:hover {
+      background: #c53030; /* 稍深一点的红色 */
+      transform: translateY(-2px); /* 悬停时轻微上浮 */
+      box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4); /* 悬停时加深阴影 */
+    }
+    .stop-btn:active {
+      transform: translateY(0); /* 点击时回到原位 */
+      box-shadow: 0 2px 4px rgba(229, 62, 62, 0.3); /* 点击时减小阴影 */
+    }
+    [data-theme='dark'] .stop-btn {
+      background: #fc8181; /* 深色模式下稍亮的红色 */
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(252, 129, 129, 0.3);
+    }
+    [data-theme='dark'] .stop-btn:hover {
+      background: #e53e3e;
+      box-shadow: 0 4px 12px rgba(252, 129, 129, 0.4);
+    }
+    [data-theme='dark'] .stop-btn:active {
+      box-shadow: 0 2px 4px rgba(252, 129, 129, 0.3);
+    }
+    /* 新建对话按钮主题适配 */
+    .new-chat-btn {
+      background: #f7f8fa;
+      color: #2563eb;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: background 0.2s, color 0.2s, border 0.2s;
+    }
+    .new-chat-btn:hover {
+      background: #f7f8fa;
+      color: #2563eb;
+      border: 1px solid #bcd6fa;
+    }
+    [data-theme='dark'] .new-chat-btn {
+      background: #2563eb !important;
+      color: #fff !important;
+      border: none !important;
+    }
+    [data-theme='dark'] .new-chat-btn:hover {
+      background: #3b82f6 !important;
+      color: #fff !important;
+      border: none !important;
+    }
+    /* 对话列表主题适配 */
+    .chat-history-list {
+      background: #f7f8fa !important;
+      color: #222 !important;
+      transition: background 0.3s, color 0.3s;
+    }
+    [data-theme='dark'] .chat-history-list {
+      background: #18191a !important;
+      color: #f5f6fa !important;
+    }
+    .chat-history-list .chat-history-item {
+      background: #f7f8fa !important;
+      color: #222 !important;
+      border-bottom: 1px solid #f0f0f0;
+      transition: background 0.3s, color 0.3s;
+    }
+    [data-theme='dark'] .chat-history-list .chat-history-item {
+      background: #18191a !important;
+      color: #f5f6fa !important;
+      border-bottom: 1px solid #333;
+    }
+    /* Starpal Chat 标题颜色适配 */
+    .sidebar-title {
+      color: #222 !important;
+    }
+    [data-theme='dark'] .sidebar-title {
+      color: #f5f6fa !important;
+    }
+    /* 个性化设置弹窗样式 */
+    .personalize-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.25);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .personalize-modal {
+      background: #f7f8fa;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      padding: 32px 28px 20px 28px;
+      min-width: 350px;
+      max-width: 90vw;
+      color: #222;
+      position: relative;
+      animation: modalIn 0.2s;
+    }
+    @keyframes modalIn {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .personalize-modal h2 {
+      font-size: 20px;
+      margin-bottom: 18px;
+      font-weight: 600;
+      text-align: center;
+    }
+    .personalize-modal label {
+      display: block;
+      margin: 12px 0 4px 0;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .personalize-modal input,
+    .personalize-modal textarea {
+      width: 100%;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 15px;
+      margin-bottom: 8px;
+      background: #f7f8fa;
+      color: #222;
+      resize: none;
+      transition: border 0.2s;
+    }
+    .personalize-modal input:focus,
+    .personalize-modal textarea:focus {
+      border: 1.5px solid #2563eb;
+      outline: none;
+    }
+    .personalize-modal .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .personalize-modal .modal-btn {
+      padding: 7px 20px;
+      border-radius: 6px;
+      border: none;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      background: #2563eb;
+      color: #fff;
+      transition: background 0.2s;
+    }
+    .personalize-modal .modal-btn.cancel {
+      background: #e0e0e0;
+      color: #222;
+    }
+    .personalize-modal .modal-btn:hover:not(.cancel) {
+      background: #1746a2;
+    }
+    [data-theme='dark'] .personalize-modal {
+      background: #18191a;
+      color: #f5f6fa;
+    }
+    [data-theme='dark'] .personalize-modal input,
+    [data-theme='dark'] .personalize-modal textarea {
+      background: #18191a;
+      color: #f5f6fa;
+      border: 1px solid #444;
+    }
+    [data-theme='dark'] .personalize-modal input:focus,
+    [data-theme='dark'] .personalize-modal textarea:focus {
+      border: 1.5px solid #3b82f6;
+    }
+    [data-theme='dark'] .personalize-modal .modal-btn.cancel {
+      background-color: #4a4a4a;
+    }
+    /* 记忆项样式 */
+    .memory-item {
+      margin-bottom: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      background-color: #f8f9fa;
+      border: 1px solid #e9ecef;
+      transition: all 0.2s ease;
+    }
+    
+    [data-theme='dark'] .memory-item {
+      background-color: #2d2d2d;
+      border: 1px solid #3d3d3d;
+    }
+    
+    .memory-item .memory-content {
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+    
+    .memory-item .memory-metadata {
+      font-size: 0.8em;
+      color: #6c757d;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    [data-theme='dark'] .memory-item .memory-metadata {
+      color: #adb5bd;
+    }
+    
+    .memory-item .memory-importance {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .memory-item .memory-importance.high i {
+      color: #e74c3c;
+    }
+    
+    .memory-item .memory-importance.medium i {
+      color: #f39c12;
+    }
+    
+    .memory-item .memory-importance.low i {
+      color: #3498db;
+    }
+    
+    [data-theme='dark'] .memory-item .memory-importance.high i {
+      color: #ff6b6b;
+    }
+    
+    [data-theme='dark'] .memory-item .memory-importance.medium i {
+      color: #ffa502;
+    }
+    
+    [data-theme='dark'] .memory-item .memory-importance.low i {
+      color: #70a1ff;
+    }
+    
+    .memory-item .memory-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    
+    .memory-item .memory-actions button {
+      padding: 4px 8px;
+      font-size: 0.8em;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .memory-item .memory-actions button i {
+      font-size: 1.1em;
+    }
+    
+    .memory-edit-btn {
+      background-color: #4a9c5d;
+      color: white;
+    }
+    
+    .memory-delete-btn {
+      background-color: #e74c3c;
+      color: white;
+    }
+    
+    .memory-item .memory-actions button:hover {
+      opacity: 0.9;
+    }
+    
+    .memory-edit-form {
+      margin-top: 10px;
+      display: none;
+    }
+    
+    .memory-edit-form textarea {
+      width: 100%;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ced4da;
+      margin-bottom: 8px;
+      resize: vertical;
+    }
+    
+    [data-theme='dark'] .memory-edit-form textarea {
+      background-color: #3d3d3d;
+      border: 1px solid #4d4d4d;
+      color: #f8f9fa;
+    }
+    
+    .memory-edit-form .edit-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    
+    .memory-edit-form .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    
+    .memory-edit-form .form-actions button {
+      padding: 6px 12px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.9em;
+    }
+    
+    .memory-edit-form .form-actions .cancel-btn {
+      background-color: #6c757d;
+      color: white;
+    }
+    
+    .memory-edit-form .form-actions .save-btn {
+      background-color: #4a9c5d;
+      color: white;
+    }
+    
+    [data-theme='dark'] .memory-edit-form .form-actions .cancel-btn {
+      background-color: #495057;
+    }
+    
+    [data-theme='dark'] .memory-edit-form .form-actions .save-btn {
+      background-color: #2d6a3e;
+    }
+    
+    .memory-empty {
+      padding: 20px;
+      text-align: center;
+      color: #6c757d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .memory-empty i {
+      font-size: 2.5em;
+      opacity: 0.6;
+    }
+    
+    [data-theme='dark'] .memory-empty {
+      color: #adb5bd;
+    }
+    
+    .memory-loading {
+      padding: 20px;
+      text-align: center;
+      color: #6c757d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .memory-loading i {
+      font-size: 2em;
+      animation: spin 1.5s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    [data-theme='dark'] .memory-loading {
+      color: #adb5bd;
+    }
+    
+    /* 组合设置模态框样式 */
+    .personalize-modal.combined-modal {
+      display: flex;
+      width: 700px;
+      max-width: 90vw;
+      padding: 0;
+      overflow: hidden;
+    }
+    
+    .settings-sidebar {
+      width: 160px;
+      background-color: #f8f9fa;
+      padding: 20px 0;
+      border-right: 1px solid #e9ecef;
+    }
+    
+    [data-theme='dark'] .settings-sidebar {
+      background-color: #2d2d2d;
+      border-right: 1px solid #3d3d3d;
+    }
+    
+    .settings-option {
+      padding: 15px 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: all 0.2s ease;
+      line-height: 1;
+    }
+    
+    .settings-option i {
+      margin-right: 10px;
+      font-size: 1.2em;
+    }
+    
+    .settings-option.active {
+      background-color: #e9ecef;
+      border-left: 4px solid #4e54c8;
+      font-weight: bold;
+    }
+    
+    [data-theme='dark'] .settings-option.active {
+      background-color: #3d3d3d;
+      border-left: 4px solid #6c70ce;
+    }
+    
+    .settings-option:hover:not(.active) {
+      background-color: #f1f3f5;
+    }
+    
+    [data-theme='dark'] .settings-option:hover:not(.active) {
+      background-color: #353535;
+    }
+    
+    .settings-content {
+      flex: 1;
+      padding: 20px;
+      position: relative;
+    }
+    
+    .settings-panel {
+      display: none;
+      opacity: 0;
+      transform: translateX(10px);
+      transition: all 0.3s ease;
+    }
+    
+    .settings-panel.active {
+      display: block;
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .settings-panel h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      color: #333;
+      font-size: 1.5em;
+    }
+    
+    [data-theme='dark'] .settings-panel h2 {
+      color: #fff;
+    }
+    
+    /* 记忆管理样式 */
+    .settings-panel h2 i {
+      margin-right: 8px;
+      vertical-align: middle;
+      color: #2563eb;
+    }
+    
+    [data-theme='dark'] .settings-panel h2 i {
+      color: #60a5fa;
+    }
+    
+    .memory-item {
+      margin-bottom: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      background-color: #f8f9fa;
+      border: 1px solid #e9ecef;
+      transition: all 0.2s ease;
+    }
+    
+    [data-theme='dark'] .memory-item {
+      background-color: #2d2d2d;
+      border: 1px solid #3d3d3d;
+    }
+    
+    .memory-item .memory-content {
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+    
+    .memory-item .memory-metadata {
+      font-size: 0.8em;
+      color: #6c757d;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    [data-theme='dark'] .memory-item .memory-metadata {
+      color: #adb5bd;
+    }
+    
+    .memory-item .memory-importance {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .memory-item .memory-importance.high i {
+      color: #e74c3c;
+    }
+    
+    .memory-item .memory-importance.medium i {
+      color: #f39c12;
+    }
+    
+    .memory-item .memory-importance.low i {
+      color: #3498db;
+    }
+    
+    [data-theme='dark'] .memory-item .memory-importance.high i {
+      color: #ff6b6b;
+    }
+    
+    [data-theme='dark'] .memory-item .memory-importance.medium i {
+      color: #ffa502;
+    }
+    
+    [data-theme='dark'] .memory-item .memory-importance.low i {
+      color: #70a1ff;
+    }
+    
+    .memory-item .memory-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    
+    .memory-item .memory-actions button {
+      padding: 4px 8px;
+      font-size: 0.8em;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .memory-item .memory-actions button i {
+      font-size: 1.1em;
+    }
+    
+    .memory-edit-btn {
+      background-color: #4a9c5d;
+      color: white;
+    }
+    
+    .memory-delete-btn {
+      background-color: #e74c3c;
+      color: white;
+    }
+    
+    .memory-item .memory-actions button:hover {
+      opacity: 0.9;
+    }
+    
+    .memory-edit-form {
+      margin-top: 10px;
+      display: none;
+    }
+    
+    .memory-edit-form textarea {
+      width: 100%;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ced4da;
+      margin-bottom: 8px;
+      resize: vertical;
+    }
+    
+    [data-theme='dark'] .memory-edit-form textarea {
+      background-color: #3d3d3d;
+      border: 1px solid #4d4d4d;
+      color: #f8f9fa;
+    }
+    
+    .memory-edit-form .edit-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    
+    .memory-edit-form .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    
+    .memory-edit-form .form-actions button {
+      padding: 6px 12px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.9em;
+    }
+    
+    .memory-edit-form .form-actions .cancel-btn {
+      background-color: #6c757d;
+      color: white;
+    }
+    
+    .memory-edit-form .form-actions .save-btn {
+      background-color: #4a9c5d;
+      color: white;
+    }
+    
+    [data-theme='dark'] .memory-edit-form .form-actions .cancel-btn {
+      background-color: #495057;
+    }
+    
+    [data-theme='dark'] .memory-edit-form .form-actions .save-btn {
+      background-color: #2d6a3e;
+    }
+    
+    .memory-empty {
+      padding: 20px;
+      text-align: center;
+      color: #6c757d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .memory-empty i {
+      font-size: 2.5em;
+      opacity: 0.6;
+    }
+    
+    [data-theme='dark'] .memory-empty {
+      color: #adb5bd;
+    }
+    
+    .memory-loading {
+      padding: 20px;
+      text-align: center;
+      color: #6c757d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .memory-loading i {
+      font-size: 2em;
+      animation: spin 1.5s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    [data-theme='dark'] .memory-loading {
+      color: #adb5bd;
+    }
+    
+    /* 组合设置模态框样式 */
+    .personalize-modal.combined-modal {
+      display: flex;
+      width: 700px;
+      max-width: 90vw;
+      padding: 0;
+      overflow: hidden;
+    }
+    
+    .settings-sidebar {
+      width: 160px;
+      background-color: #f8f9fa;
+      padding: 20px 0;
+      border-right: 1px solid #e9ecef;
+    }
+    
+    [data-theme='dark'] .settings-sidebar {
+      background-color: #2d2d2d;
+      border-right: 1px solid #3d3d3d;
+    }
+    
+    .settings-option {
+      padding: 15px 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: all 0.2s ease;
+      line-height: 1;
+    }
+    
+    .settings-option i {
+      margin-right: 10px;
+      font-size: 1.2em;
+    }
+    
+    .settings-option.active {
+      background-color: #e9ecef;
+      border-left: 4px solid #4e54c8;
+      font-weight: bold;
+    }
+    
+    [data-theme='dark'] .settings-option.active {
+      background-color: #3d3d3d;
+      border-left: 4px solid #6c70ce;
+    }
+    
+    .settings-option:hover:not(.active) {
+      background-color: #f1f3f5;
+    }
+    
+    [data-theme='dark'] .settings-option:hover:not(.active) {
+      background-color: #353535;
+    }
+    
+    .settings-content {
+      flex: 1;
+      padding: 20px;
+      position: relative;
+    }
+    
+    .settings-panel {
+      display: none;
+      opacity: 0;
+      transform: translateX(10px);
+      transition: all 0.3s ease;
+    }
+    
+    .settings-panel.active {
+      display: block;
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .settings-panel h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      color: #333;
+      font-size: 1.5em;
+    }
+    
+    [data-theme='dark'] .settings-panel h2 {
+      color: #fff;
+    }
+    
+    /* 记忆管理样式 */
+    .settings-panel h2 i {
+      margin-right: 8px;
+      vertical-align: middle;
+      color: #2563eb;
+    }
+    
+    [data-theme='dark'] .settings-panel h2 i {
+      color: #60a5fa;
+    }
+    
+    .memory-item {
+      margin-bottom: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      background-color: #f8f9fa;
+      border: 1px solid #e9ecef;
+      transition: all 0.2s ease;
+    }
+    
+    [data-theme='dark'] .memory-item {
+      background-color: #2d2d2d;
+      border: 1px solid #3d3d3d;
+    }
+    
+    .memory-item .memory-content {
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+    
+    .memory-item .memory-metadata {
+      font-size: 0.8em;
+      color: #6c757d;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    [data-theme='dark'] .memory-item .memory-metadata {
+      color: #adb5bd;
+    }
+    
+    .memory-item .memory-importance {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .memory-item .memory-importance.high i {
+      color: #e74c3c;
+    }
+    
+    .memory-item .memory-importance.medium i {
+      color: #f39c12;
+    }
+    
+    .memory-item .memory-importance.low i {
+      color: #3498db;
+    }
+    
+    [data-theme='dark'] .memory-item .memory-importance.high i {
+      color: #ff6b6b;
+    }
+    
+    [data-theme='dark'] .memory-item .memory-importance.medium i {
+      color: #ffa502;
+    }
+    
+    [data-theme='dark'] .memory-item .memory-importance.low i {
+      color: #70a1ff;
+    }
+    
+    .memory-item .memory-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    
+    .memory-item .memory-actions button {
+      padding: 4px 8px;
+      font-size: 0.8em;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .memory-item .memory-actions button i {
+      font-size: 1.1em;
+    }
+    
+    .memory-edit-btn {
+      background-color: #4a9c5d;
+      color: white;
+    }
+    
+    .memory-delete-btn {
+      background-color: #e74c3c;
+      color: white;
+    }
+    
+    .memory-item .memory-actions button:hover {
+      opacity: 0.9;
+    }
+    
+    .memory-edit-form {
+      margin-top: 10px;
+      display: none;
+    }
+    
+    .memory-edit-form textarea {
+      width: 100%;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ced4da;
+      margin-bottom: 8px;
+      resize: vertical;
+    }
+    
+    [data-theme='dark'] .memory-edit-form textarea {
+      background-color: #3d3d3d;
+      border: 1px solid #4d4d4d;
+      color: #f8f9fa;
+    }
+    
+    .memory-edit-form .edit-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    
+    .memory-edit-form .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    
+    .memory-edit-form .form-actions button {
+      padding: 6px 12px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.9em;
+    }
+    
+    .memory-edit-form .form-actions .cancel-btn {
+      background-color: #6c757d;
+      color: white;
+    }
+    
+    .memory-edit-form .form-actions .save-btn {
+      background-color: #4a9c5d;
+      color: white;
+    }
+    
+    [data-theme='dark'] .memory-edit-form .form-actions .cancel-btn {
+      background-color: #495057;
+    }
+    
+    [data-theme='dark'] .memory-edit-form .form-actions .save-btn {
+      background-color: #2d6a3e;
+    }
+    
+    .memory-empty {
+      padding: 20px;
+      text-align: center;
+      color: #6c757d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .memory-empty i {
+      font-size: 2.5em;
+      opacity: 0.6;
+    }
+    
+    [data-theme='dark'] .memory-empty {
+      color: #adb5bd;
+    }
+    
+    .memory-loading {
+      padding: 20px;
+      text-align: center;
+      color: #6c757d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .memory-loading i {
+      font-size: 2em;
+      animation: spin 1.5s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    [data-theme='dark'] .memory-loading {
+      color: #adb5bd;
+    }
+    
+    /* 组合设置模态框样式 */
+    .personalize-modal.combined-modal {
+      display: flex;
+      width: 700px;
+      max-width: 90vw;
+      padding: 0;
+      overflow: hidden;
+    }
+    
+    .settings-sidebar {
+      width: 160px;
+      background-color: #f8f9fa;
+      padding: 20px 0;
+      border-right: 1px solid #e9ecef;
+    }
+    
+    [data-theme='dark'] .settings-sidebar {
+      background-color: #2d2d2d;
+      border-right: 1px solid #3d3d3d;
+    }
+    
+    .settings-option {
+      padding: 15px 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: all 0.2s ease;
+      line-height: 1;
+    }
+    
+    .settings-option i {
+      margin-right: 10px;
+      font-size: 1.2em;
+    }
+    
+    .settings-option.active {
+      background-color: #e9ecef;
+      border-left: 4px solid #4e54c8;
+      font-weight: bold;
+    }
+    
+    [data-theme='dark'] .settings-option.active {
+      background-color: #3d3d3d;
+      border-left: 4px solid #6c70ce;
+    }
+    
+    .settings-option:hover:not(.active) {
+      background-color: #f1f3f5;
+    }
+    
+    [data-theme='dark'] .settings-option:hover:not(.active) {
+      background-color: #353535;
+    }
+    
+    .settings-content {
+      flex: 1;
+      padding: 20px;
+      position: relative;
+    }
+    
+    .settings-panel {
+      display: none;
+      opacity: 0;
+      transform: translateX(10px);
+      transition: all 0.3s ease;
+    }
+    
+    .settings-panel.active {
+      display: block;
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .settings-panel h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      color: #333;
+      font-size: 1.5em;
+    }
+    
+    [data-theme='dark'] .settings-panel h2 {
+      color: #fff;
+    }
+    
+    /* 记忆管理样式 */
+    .settings-panel h2 i {
+      margin-right: 8px;
+      vertical-align: middle;
+      color: #2563eb;
+    }
+    
+    [data-theme='dark'] .settings-panel h2 i {
+      color: #60a5fa;
+    }
+    
+    .memory-item {
+      margin-bottom: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      background-color: #f8f9fa;
+      border: 1px solid #e9ecef;
+      transition: all 0.2s ease;
+    }
+    
+    [data-theme='dark'] .memory-item {
+      background-color: #2d2d2d;
+      border: 1px solid #3d3d3d;
+    }
+    
+    .memory-item .memory-content {
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+    
+    .memory-item .memory-metadata {
+      font-size: 0.8em;
+      color: #6c757d;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    [data-theme='dark'] .memory-item .memory-metadata {
+      color: #adb5bd;
+    }
+    
+    .memory-item .memory-importance {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .memory-item .memory-importance.high i {
+      color: #e74c3c;
+    }
+    
+    .memory-item .memory-importance.medium i {
+      color: #f39c12;
+    }
+    
+    .memory-item .memory-importance.low i {
+      color: #3498db;
+    }
+    
+    [data-theme='dark'] .memory-item .memory-importance.high i {
+      color: #ff6b6b;
+    }
+    
+    [data-theme='dark'] .memory-item .memory-importance.medium i {
+      color: #ffa502;
+    }
+    
+    [data-theme='dark'] .memory-item .memory-importance.low i {
+      color: #70a1ff;
+    }
+    
+    .memory-item .memory-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    
+    .memory-item .memory-actions button {
+      padding: 4px 8px;
+      font-size: 0.8em;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .memory-item .memory-actions button i {
+      font-size: 1.1em;
+    }
+    
+    .memory-edit-btn {
+      background-color: #4a9c5d;
+      color: white;
+    }
+    
+    .memory-delete-btn {
+      background-color: #e74c3c;
+      color: white;
+    }
+    
+    .memory-item .memory-actions button:hover {
+      opacity: 0.9;
+    }
+    
+    .memory-edit-form {
+      margin-top: 10px;
+      display: none;
+    }
+    
+    .memory-edit-form textarea {
+      width: 100%;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ced4da;
+      margin-bottom: 8px;
+      resize: vertical;
+    }
+    
+    [data-theme='dark'] .memory-edit-form textarea {
+      background-color: #3d3d3d;
+      border: 1px solid #4d4d4d;
+      color: #f8f9fa;
+    }
+    
+    .memory-edit-form .edit-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    
+    .memory-edit-form .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    
+    .memory-edit-form .form-actions button {
+      padding: 6px 12px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.9em;
+    }
+    
+    .memory-edit-form .form-actions .cancel-btn {
+      background-color: #6c757d;
+      color: white;
+    }
+    
+    .memory-edit-form .form-actions .save-btn {
+      background-color: #4a9c5d;
+      color: white;
+    }
+    
+    [data-theme='dark'] .memory-edit-form .form-actions .cancel-btn {
+      background-color: #495057;
+    }
+    
+    [data-theme='dark'] .memory-edit-form .form-actions .save-btn {
+      background-color: #2d6a3e;
+    }
+    
+    .memory-empty {
+      padding: 20px;
+      text-align: center;
+      color: #6c757d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .memory-empty i {
+      font-size: 2.5em;
+      opacity: 0.6;
+    }
+    
+    [data-theme='dark'] .memory-empty {
+      color: #adb5bd;
+    }
+    
+    .memory-loading {
+      padding: 20px;
+      text-align: center;
+      color: #6c757d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .memory-loading i {
+      font-size: 2em;
+      animation: spin 1.5s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    [data-theme='dark'] .memory-loading {
+      color: #adb5bd;
+    }
+    
+    /* 组合设置模态框样式 */
+    .personalize-modal.combined-modal {
+      display: flex;
+      width: 700px;
+      max-width: 90vw;
+      padding: 0;
+      overflow: hidden;
+    }
+    
+    .settings-sidebar {
+      width: 160px;
+      background-color: #f8f9fa;
+      padding: 20px 0;
+      border-right: 1px solid #e9ecef;
+    }
+    
+    [data-theme='dark'] .settings-sidebar {
+      background-color: #2d2d2d;
+      border-right: 1px solid #3d3d3d;
+    }
+    
+    .settings-option {
+      padding: 15px 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: all 0.2s ease;
+      line-height: 1;
+    }
+    
+    .settings-option i {
+      margin-right: 10px;
+      font-size: 1.2em;
+    }
+    
+    .settings-option.active {
+      background-color: #e9ecef;
+      border-left: 4px solid #4e54c8;
+      font-weight: bold;
+    }
+    
+    [data-theme='dark'] .settings-option.active {
+      background-color: #3d3d3d;
+      border-left: 4px solid #6c70ce;
+    }
+    
+    .settings-option:hover:not(.active) {
+      background-color: #f1f3f5;
+    }
+    
+    [data-theme='dark'] .settings-option:hover:not(.active) {
+      background-color: #353535;
+    }
+    
+    .settings-content {
+      flex: 1;
+      padding: 20px;
+      position: relative;
+    }
+    
+    .settings-panel {
+      display: none;
+      opacity: 0;
+      transform: translateX(10px);
+      transition: all 0.3s ease;
+    }
+    
+    .settings-panel.active {
+      display: block;
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .settings-panel h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      color: #333;
+      font-size: 1.5em;
+    }
+    
+    [data-theme='dark'] .settings-panel h2 {
+      color: #fff;
+    }
+    
+    /* 记忆管理样式 */
+    .settings-panel h2 i {
+      margin-right: 8px;
+      vertical-align: middle;
+      color: #2563eb;
+    }
+    
+    [data-theme='dark'] .settings-panel h2 i {
+      color: #60a5fa;
+    }
+    
+    .memory-item {
+      margin-bottom: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      background-color: #f8f9fa;
+      border: 1px solid #e9ecef;
+      transition: all 0.2s ease;
+    }
+    
+    [data-theme='dark'] .memory-item {
+      background-color: #2d2d2d;
+      border: 1px solid #3d3d3d;
+    }
+    
+    .memory-item .memory-content {
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+    
+    .memory-item .memory-metadata {
+      font-size: 0.8em;
+      color: #6c757d;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    [data-theme='dark'] .memory-item .memory-metadata {
+      color: #adb5bd;
+    }
+    
+    .memory-item .memory-importance {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .memory-item .memory-importance.high i {
+      color: #e74c3c;
+    }
+    
+    .memory-item .memory-importance.medium i {
+      color: #f39c12;
+    }
+    
+    .memory-item .memory-importance.low i {
+      color: #3498db;
+    }
+    
+    [data-theme='dark'] .memory-item .memory-importance.high i {
+      color: #ff6b6b;
+    }
+    
+    [data-theme='dark'] .memory-item .memory-importance.medium i {
+      color: #ffa502;
+    }
+    
+    [data-theme='dark'] .memory-item .memory-importance.low i {
+      color: #70a1ff;
+    }
+    
+    .memory-item .memory-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    
+    .memory-item .memory-actions button {
+      padding: 4px 8px;
+      font-size: 0.8em;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .memory-item .memory-actions button i {
+      font-size: 1.1em;
+    }
+    
+    .memory-edit-btn {
+      background-color: #4a9c5d;
+      color: white;
+    }
+    
+    .memory-delete-btn {
+      background-color: #e74c3c;
+      color: white;
+    }
+    
+    .memory-item .memory-actions button:hover {
+      opacity: 0.9;
+    }
+    
+    .memory-edit-form {
+      margin-top: 10px;
+      display: none;
+    }
+    
+    .memory-edit-form textarea {
+      width: 100%;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ced4da;
+      margin-bottom: 8px;
+      resize: vertical;
+    }
+    
+    [data-theme='dark'] .memory-edit-form textarea {
+      background-color: #3d3d3d;
+      border: 1px solid #4d4d4d;
+      color: #f8f9fa;
+    }
+    
+    .memory-edit-form .edit-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    
+    .memory-edit-form .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    
+    .memory-edit-form .form-actions button {
+      padding: 6px 12px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.9em;
+    }
+    
+    .memory-edit-form .form-actions .cancel-btn {
+      background-color: #6c757d;
+      color: white;
+    }
+    
+    .memory-edit-form .form-actions .save-btn {
+      background-color: #4a9c5d;
+      color: white;
+    }
+    
+    [data-theme='dark'] .memory-edit-form .form-actions .cancel-btn {
+      background-color: #495057;
+    }
+    
+    [data-theme='dark'] .memory-edit-form .form-actions .save-btn {
+      background-color: #2d6a3e;
+    }
+    
+    .memory-empty {
+      padding: 20px;
+      text-align: center;
+      color: #6c757d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .memory-empty i {
+      font-size: 2.5em;
+      opacity: 0.6;
+    }
+    
+    [data-theme='dark'] .memory-empty {
+      color: #adb5bd;
+    }
+    
+    .memory-loading {
+      padding: 20px;
+      text-align: center;
+      color: #6c757d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .memory-loading i {
+      font-size: 2em;
+      animation: spin 1.5s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    [data-theme='dark'] .memory-loading {
+      color: #adb5bd;
+    }
+    
+    /* 智能侧边栏动画与布局 */
+    .chat-history-panel {
+      position: relative;
+      width: 60px;
+      min-width: 60px;
+      max-width: 60px;
+      transition: width 0.3s cubic-bezier(0.4,0,0.2,1);
+      overflow: hidden;
+      z-index: 20;
+      background: #f7f8fa;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.04);
+    }
+    .chat-history-panel.expanded {
+      width: 280px;
+      min-width: 280px;
+      max-width: 300px;
+      transition: width 0.3s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: 2px 0 16px rgba(0,0,0,0.10);
+    }
+    .chat-history-header, .chat-history-list, .chat-history-footer {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .chat-history-panel.expanded .chat-history-header,
+    .chat-history-panel.expanded .chat-history-list,
+    .chat-history-panel.expanded .chat-history-footer {
+      opacity: 1;
+      pointer-events: auto;
+      transition: opacity 0.2s 0.1s;
+    }
+    /* 仅菜单栏时只显示logo */
+    .sidebar-title, .chat-history-list, .chat-history-footer, .sidebar-toggle-btn {
+      display: none;
+    }
+    .chat-history-panel.expanded .sidebar-title,
+    .chat-history-panel.expanded .chat-history-list,
+    .chat-history-panel.expanded .chat-history-footer,
+    .chat-history-panel.expanded .sidebar-toggle-btn {
+      display: block;
+    }
+    .starpal-logo {
+      justify-content: center;
+      width: 100%;
+    }
+    .sidebar-ai-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+    }
+    /* 菜单栏悬停感应区 */
+    #sidebarHoverArea {
+      width: 60px;
+      min-width: 40px;
+      max-width: 60px;
+      height: 100%;
+      position: absolute;
+      left: 0; top: 0;
+      z-index: 30;
+      background: transparent;
+      cursor: pointer;
+    }
+    /* 动画优化 */
+    .chat-history-panel, .chat-history-panel * {
+      box-sizing: border-box;
+    }
+    /* 主题适配 */
+    [data-theme='dark'] .chat-history-panel {
+      background: #18191a !important;
+      box-shadow: 2px 0 16px rgba(0,0,0,0.18);
+    }
+    [data-theme='dark'] .chat-history-panel.expanded {
+      background: #18191a !important;
+    }
+    .sidebar-mini-menu {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 60px;
+      min-width: 60px;
+      max-width: 60px;
+      height: 100vh;
+      position: absolute;
+      left: 0; top: 0;
+      z-index: 25;
+      background: transparent;
+      pointer-events: auto;
+      transition: opacity 0.2s;
+    }
+    .mini-menu-item {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      margin-bottom: 8px;
+      user-select: none;
+      background: none;
+      border: none;
+      outline: none;
+      padding: 0;
+    }
+    .mini-menu-spacer {
+      flex: 1 1 auto;
+      width: 100%;
+    }
+    .mini-new-chat-btn:active {
+      background: #f7f8fa;
+      border-radius: 50%;
+    }
+    .chat-history-panel.expanded .sidebar-mini-menu {
+      display: none;
+    }
+    .chat-history-panel:not(.expanded) .chat-history-footer {
+      display: none !important;
+    }
+    .chat-history-panel.expanded .chat-history-footer {
+      display: block;
+    }
+    /* ...existing code... */
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <!-- 左侧历史栏 -->
+    <div class="chat-history-panel" id="chatSidebar">
+      <!-- 悬停感应区，宽度与收起时菜单栏一致 -->
+      <div id="sidebarHoverArea"></div>
+      <!-- 菜单栏（收起时显示） -->
+      <div class="sidebar-mini-menu">
+        <div class="mini-menu-item" id="miniAiIcon" title="AI主页">
+          <img src="assets/ai-avatar.png" alt="AI头像" style="width:32px;height:32px;border-radius:50%;margin:14px auto 10px auto;display:block;" />
+        </div>
+        <div class="mini-menu-spacer" style="flex:1 1 auto;"></div>
+        <button class="mini-menu-item mini-new-chat-btn" id="miniNewChatBtn" title="新建对话" style="margin-bottom:18px;">
+          <i class="ri-add-line" style="font-size:28px;display:block;margin:0 auto;color:#2563eb;"></i>
+        </button>
+      </div>
+      <div class="chat-history-header" style="position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <div class="starpal-logo" style="font-size: 24px; display: flex; align-items: center; gap: 10px;">
+          <img src="assets/ai-avatar.png" alt="AI头像" class="sidebar-ai-avatar">
+          <span class="sidebar-title">Starpal 星伴</span>
+        </div>
+      </div>
+      <div class="chat-history-list" id="chatHistoryList"></div>
+      <div class="chat-history-footer">
+        <button class="new-chat-btn" id="newChatBtn" title="添加新对话">
+          <i class="ri-add-line" style="margin-right: 8px;"></i><span class="sidebar-btn-text">新建对话</span>
+        </button>
+      </div>
+    </div>
+    <!-- 右侧主区域 -->
+    <div class="chat-main">
+      <div class="chat-header">
+        <span id="chatTitle">
+          <i class="ri-chat-smile-2-line" style="margin-right: 8px;"></i>
+          <span style="font-weight: 500;">智能对话</span>
+        </span>
+        <div class="header-actions" style="display: flex; align-items: center; gap: 15px;">
+          <div class="user-avatar-upload" style="display: flex; align-items: center; gap: 8px; position: relative;">
+            <img id="chatUserAvatar" src="assets/user-avatar.png" alt="我的头像" class="chat-user-avatar" style="width:36px;height:36px;border-radius:50%;object-fit:cover;box-shadow:0 2px 8px rgba(0,0,0,0.10);border:2px solid #fff;cursor:pointer;">
+            <!-- 头像弹出菜单 -->
+            <div id="avatarMenu" class="avatar-menu" style="display:none;position:absolute;top:48px;right:0;min-width:180px;background:#f7f8fa;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:1000;padding:8px 0;">
+              <div class="avatar-menu-item" id="changeAvatarBtn" style="display:flex;align-items:center;gap:10px;padding:12px 22px;cursor:pointer;">
+                <i class="ri-image-edit-line"></i>
+                <span>更换头像</span>
+              </div>
+              <div class="avatar-menu-item" id="themeToggle" style="display:flex;align-items:center;gap:10px;padding:12px 22px;cursor:pointer;">
+                <i id="themeIcon" class="ri-sun-line"></i>
+                <span>主题</span>
+                <span id="themeText" style="margin-left:8px;font-size:13px;color:#888;">浅色</span>
+              </div>
+              <div class="avatar-menu-item" id="personalizeBtn" style="display:flex;align-items:center;gap:10px;padding:12px 22px;cursor:pointer;">
+                <i class="ri-user-settings-line"></i>
+                <span>自定义</span>
+              </div>
+              <div class="avatar-menu-item" id="logoutBtn" style="display:flex;align-items:center;gap:10px;padding:12px 22px;cursor:pointer;color:#e74c3c;">
+                <i class="ri-logout-box-line"></i>
+                <span>注销</span>
+              </div>
+            </div>
+            <input id="userAvatarInput" type="file" accept="image/*" style="display:none;">
+          </div>
+        </div>
+      </div>
+      <div class="chat-welcome welcome-text" id="chatWelcome"></div>
+      <div class="chat-body" id="chatBody"></div>
+      <form class="chat-footer" id="chatForm" autocomplete="off">
+        <div class="input-container">
+          <textarea class="chat-input" id="chatInput" placeholder="输入消息，按Enter发送，Shift+Enter换行..." required></textarea>
+          
+          <div class="input-hint">
+            <i class="ri-information-line"></i>
+            <span>Shift+Enter 换行</span>
+          </div>
+          
+          <button class="send-btn" type="submit">
+            <i class="ri-send-plane-fill"></i>
+          </button>
+          
+          <button class="stop-btn" id="stopBtn" type="button" style="display:none;">
+            <i class="ri-stop-circle-fill"></i>
+          </button>
+        </div>
+        <input type="file" id="attachmentInput" style="display:none;" />
+      </form>
+    </div>
+  </div>
+  <div id="combinedSettingsModalOverlay" class="personalize-modal-overlay" style="display:none;">
+    <div class="personalize-modal combined-modal">
+      <div class="settings-sidebar">
+        <div class="settings-option active" data-target="personalizeSettings">
+          <i class="ri-user-settings-line"></i>
+          <span>个性化设置</span>
+        </div>
+        <div class="settings-option" data-target="aiPromptSettings">
+          <i class="ri-robot-line"></i>
+          <span>指令</span>
+        </div>
+        <div class="settings-option" data-target="memorySettings">
+          <i class="ri-database-2-line"></i>
+          <span>记忆管理</span>
+        </div>
+      </div>
+      <div class="settings-content">
+        <div class="settings-panel active" id="personalizeSettings">
+          <h2><i class="ri-user-settings-line"></i> 个性化设置</h2>
+          <form id="personalizeForm" autocomplete="off">
+            <label for="aiName">AI 应该怎么称呼你？</label>
+            <input id="aiName" name="aiName" type="text" maxlength="20" placeholder="如：范先生" />
+            <label for="identity">您的身份/职业</label>
+            <input id="identity" name="identity" type="text" maxlength="30" placeholder="如：深度学习研究生" />
+            <label for="hobbies">兴趣爱好/个性化信息</label>
+            <textarea id="hobbies" name="hobbies" rows="3" maxlength="100" placeholder="如：喜欢AI、编程、篮球等"></textarea>
+            <div class="modal-actions">
+              <button type="button" class="modal-btn cancel" id="combinedSettingsCancelBtn">取消</button>
+              <button type="submit" class="modal-btn">保存</button>
+            </div>
+          </form>
+        </div>
+        <div class="settings-panel" id="aiPromptSettings">
+          <h2><i class="ri-robot-line"></i> 指令</h2>
+          <form id="systemPromptForm" autocomplete="off">
+            <label for="systemPrompt">自定义指令（控制星伴的行为和风格）</label>
+            <textarea id="systemPrompt" name="systemPrompt" rows="6" placeholder="例如：你是一个友好、专业的AI助手，名叫StarPal。请尽可能提供准确、有用的信息。" style="min-height: 150px;"></textarea>              <div class="prompt-templates" style="margin-top: 10px; margin-bottom: 15px;">
+              <label style="margin-bottom: 8px; display: block;">快速选择模板：</label>
+              <select id="promptTemplates" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ddd;">
+                <option value="">-- 选择预设模板 --</option>
+                <option value="professional">专业顾问</option>
+                <option value="creative">创意伙伴</option>
+                <option value="teacher">教育导师</option>
+                <option value="friend">朋友聊天</option>
+                <option value="custom">自定义模板</option>
+              </select>
+              <div style="margin-top: 12px; display: flex; gap: 10px;">
+                <button type="button" id="saveCustomPromptBtn" class="modal-btn" style="flex: 1; background-color: #4a9c5d;">保存为自定义模板</button>
+              </div>
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="modal-btn cancel" id="aiPromptCancelBtn">取消</button>
+              <button type="submit" class="modal-btn">保存</button>
+            </div>
+          </form>
+        </div>
+        
+        <div class="settings-panel" id="memorySettings">
+          <h2><i class="ri-database-2-line"></i> 记忆管理</h2>
+          <div class="memories-container">
+            <div class="memories-header">
+              <p>下面是AI的长期记忆，这些记忆会持久保存，并在未来的对话中用于回忆与你相关的重要信息。</p>
+              <div class="memories-actions" style="margin: 15px 0;">
+                <button type="button" id="refreshMemoriesBtn" class="modal-btn" style="background-color: #4a9c5d;">
+                  <i class="ri-refresh-line"></i> 刷新记忆
+                </button>
+                <button type="button" id="clearAllMemoriesBtn" class="modal-btn" style="background-color: #e74c3c; margin-left: 10px;">
+                  <i class="ri-delete-bin-line"></i> 清除所有记忆
+                </button>
+              </div>
+            </div>
+            <div class="memories-list" id="memoriesList" style="margin-top: 15px; max-height: 300px; overflow-y: auto;">
+              <div class="memory-loading">加载记忆中...</div>
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="modal-btn cancel" id="memoryCancelBtn">关闭</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/chat.js"></script>
+  <script>
+  // 智能侧边栏交互
+  window.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.getElementById('chatSidebar');
+    const hoverArea = document.getElementById('sidebarHoverArea');
+    let sidebarTimer = null;
+    
+    // 处理输入框的键盘事件，让Enter发送消息，Shift+Enter换行
+    const chatInput = document.getElementById('chatInput');
+    const inputHint = document.querySelector('.input-hint');
+    
+    // 检查输入内容，显示或隐藏提示
+    function updateInputHint() {
+      if (chatInput.value.trim()) {
+        inputHint.style.opacity = '0';
+      } else {
+        inputHint.style.opacity = '1';
+      }
+    }
+    
+    // 初始检查
+    updateInputHint();
+    
+    // 输入时检查
+    chatInput.addEventListener('input', updateInputHint);
+    
+    chatInput.addEventListener('keydown', function(e) {
+      // 如果按下的是Enter键
+      if (e.key === 'Enter') {
+        // 如果同时按下了Shift键，则不阻止默认行为（允许换行）
+        if (e.shiftKey) {
+          return;
+        }
+        // 否则阻止默认的换行行为
+        e.preventDefault();
+        
+        // 如果输入框有内容，则触发表单提交
+        if (this.value.trim()) {
+          document.getElementById('chatForm').dispatchEvent(new Event('submit'));
+        }
+      }
+    });
+    
+    // 悬停展开
+    hoverArea.addEventListener('mouseenter', function() {
+      clearTimeout(sidebarTimer);
+      sidebar.classList.add('expanded');
+      // 通知输入框位置更新
+      if (window.updateInputPosition) {
+        setTimeout(window.updateInputPosition, 300); // 等待CSS动画完成
+      }
+    });
+    
+    // 离开收起
+    sidebar.addEventListener('mouseleave', function(e) {
+      sidebarTimer = setTimeout(()=>{
+        sidebar.classList.remove('expanded');
+        // 通知输入框位置更新
+        if (window.updateInputPosition) {
+          setTimeout(window.updateInputPosition, 300); // 等待CSS动画完成
+        }
+      }, 60);
+    });
+    
+    // 防止误触，进入侧边栏时清除收起定时器
+    sidebar.addEventListener('mouseenter', function() {
+      clearTimeout(sidebarTimer);
+    });
+    // 头像菜单弹出逻辑
+    const avatar = document.getElementById('chatUserAvatar');
+    const menu = document.getElementById('avatarMenu');
+    let menuOpen = false;
+    avatar.onclick = function(e) {
+      e.stopPropagation();
+      menu.style.display = menuOpen ? 'none' : 'block';
+      menuOpen = !menuOpen;
+    };
+    document.body.addEventListener('click', function(e) {
+      if (!menu.contains(e.target)) {
+        menu.style.display = 'none';
+        menuOpen = false;
+      }
+      const themeSubMenu = document.getElementById('themeSubMenu');
+      if (themeSubMenu && !themeSubMenu.contains(e.target) && e.target.id !== 'themeToggle') {
+        themeSubMenu.style.display = 'none';
+      }
+    });
+    menu.onclick = function(e) { e.stopPropagation(); };
+    // 更换头像逻辑
+    const changeAvatarBtn = document.getElementById('changeAvatarBtn');
+    const userAvatarInput = document.getElementById('userAvatarInput');
+    changeAvatarBtn.onclick = function() {
+      userAvatarInput.click();
+    };
+    userAvatarInput.onchange = function(e) {
+      const file = e.target.files[0];
+      if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          avatar.src = evt.target.result;
+          localStorage.setItem('userAvatar', evt.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+    // 页面加载时恢复头像
+    const saved = localStorage.getItem('userAvatar');
+    if(saved) avatar.src = saved;
+    // 主题切换逻辑
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeText = document.getElementById('themeText');
+    function setTheme(mode) {
+      if(mode==='dark') {
+        document.documentElement.setAttribute('data-theme','dark');
+        themeIcon.className = 'ri-moon-line';
+        themeText.textContent = '深色';
+      } else {
+        document.documentElement.setAttribute('data-theme','light');
+        themeIcon.className = 'ri-sun-line';
+        themeText.textContent = '浅色';
+      }
+      localStorage.setItem('theme', mode);
+    }
+    // 初始化主题
+    const savedTheme = localStorage.getItem('theme');
+    setTheme(savedTheme==='dark'?'dark':'light');
+    themeToggle.onclick = function() {
+      const mode = document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+      setTheme(mode);
+      if(window.Utils && typeof Utils.showToast==='function'){
+        Utils.showToast('已切换为'+(mode==='dark'?'深色':'浅色')+'模式');
+      }
+    };
+    // 注销逻辑
+    const logoutBtn = document.getElementById('logoutBtn');
+    logoutBtn.onclick = function() {
+      if(window.storageManager && typeof storageManager.clearCurrentUser === 'function'){
+        storageManager.clearCurrentUser();
+      } else {
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('currentName');
+      }
+      window.location.href = 'login.html';
+    };
+    // 个性化设置弹窗逻辑
+    const personalizeBtn = document.getElementById('personalizeBtn');
+    const combinedSettingsModalOverlay = document.getElementById('combinedSettingsModalOverlay');
+    const personalizeForm = document.getElementById('personalizeForm');
+    const systemPromptForm = document.getElementById('systemPromptForm');
+    const combinedSettingsCancelBtn = document.getElementById('combinedSettingsCancelBtn');
+    const aiPromptCancelBtn = document.getElementById('aiPromptCancelBtn');
+    const promptTemplates = document.getElementById('promptTemplates');
+    
+    // 设置选项切换
+    const settingsOptions = document.querySelectorAll('.settings-option');
+    const settingsPanels = document.querySelectorAll('.settings-panel');
+    
+    settingsOptions.forEach(option => {
+      option.addEventListener('click', function() {
+        // 移除所有选项的激活状态
+        settingsOptions.forEach(opt => opt.classList.remove('active'));
+        // 给当前点击的选项添加激活状态
+        this.classList.add('active');
+        
+        // 获取目标面板的ID
+        const targetPanelId = this.getAttribute('data-target');
+        
+        // 隐藏所有面板
+        settingsPanels.forEach(panel => panel.classList.remove('active'));
+        
+        // 显示目标面板
+        document.getElementById(targetPanelId).classList.add('active');
+      });
+    });
+    
+    // 打开弹窗
+    personalizeBtn.onclick = function() {
+      // 读取已保存信息
+      const info = JSON.parse(localStorage.getItem('personalizeInfo')||'{}');
+      personalizeForm.aiName.value = info.aiName||'';
+      personalizeForm.identity.value = info.identity||'';
+      personalizeForm.hobbies.value = info.hobbies||'';
+      
+      // 获取当前聊天的系统提示词
+      const currentChatId = storageManager.getCurrentChatId();
+      
+      if (currentChatId) {
+        apiClient.getSystemPrompt(storageManager.currentUser, currentChatId)
+          .then(response => {
+            if (response.success) {
+              // 如果有用户提示词则显示，否则显示空字符串
+              systemPromptForm.systemPrompt.value = response.system_prompt || "";
+            } else {
+              // 失败时显示空字符串
+              systemPromptForm.systemPrompt.value = "";
+            }
+            // 显示模态框
+            combinedSettingsModalOverlay.style.display = 'flex';
+            // 默认显示个性化设置面板
+            settingsOptions[0].click();
+          })
+          .catch(error => {
+            console.error('获取系统提示词失败:', error);
+            // 失败时显示空字符串
+            systemPromptForm.systemPrompt.value = "";
+            // 显示模态框
+            combinedSettingsModalOverlay.style.display = 'flex';
+            // 默认显示个性化设置面板
+            settingsOptions[0].click();
+          });
+      } else {
+        // 显示模态框
+        combinedSettingsModalOverlay.style.display = 'flex';
+        // 默认显示个性化设置面板
+        settingsOptions[0].click();
+        Utils.showToast('请先创建或选择一个对话来设置AI提示词');
+      }
+    };
+    
+    // 关闭弹窗
+    combinedSettingsCancelBtn.onclick = function() {
+      combinedSettingsModalOverlay.style.display = 'none';
+    };
+    
+    aiPromptCancelBtn.onclick = function() {
+      combinedSettingsModalOverlay.style.display = 'none';
+    };
+    
+    combinedSettingsModalOverlay.onclick = function(e) {
+      if(e.target === combinedSettingsModalOverlay) combinedSettingsModalOverlay.style.display = 'none';
+    };
+    
+    // 保存个性化信息
+    personalizeForm.onsubmit = function(e) {
+      e.preventDefault();
+      const info = {
+        aiName: personalizeForm.aiName.value.trim(),
+        identity: personalizeForm.identity.value.trim(),
+        hobbies: personalizeForm.hobbies.value.trim()
+      };
+      localStorage.setItem('personalizeInfo', JSON.stringify(info));
+      combinedSettingsModalOverlay.style.display = 'none';
+      
+      // 立即将个性化信息发送给AI
+      const currentChatId = storageManager.getCurrentChatId();
+      if (currentChatId) {
+        // 构建个性化信息消息
+        let prefix = '';
+        if(info.aiName && info.aiName.trim()) prefix += `请称呼我为${info.aiName}。`;
+        if(info.identity && info.identity.trim()) prefix += `我的身份是${info.identity}。`;
+        if(info.hobbies && info.hobbies.trim()) prefix += `我的兴趣爱好：${info.hobbies}。`;
+        
+        if(prefix) {
+          // 发送个性化信息给AI，但不显示在聊天界面
+          apiClient.chatStream(prefix, storageManager.currentUser, currentChatId, null)
+            .catch(error => console.error('发送个性化信息错误:', error));
+          // 重置标志，确保下次对话不会重复发送
+          window._personalizePromptSent = true;
+          
+          if(window.Utils && typeof Utils.showToast==='function'){
+            Utils.showToast('个性化信息已保存并应用到当前对话！');
+          }
+        } else {
+          if(window.Utils && typeof Utils.showToast==='function'){
+            Utils.showToast('个性化信息已保存！');
+          }
+        }
+      } else {
+        if(window.Utils && typeof Utils.showToast==='function'){
+          Utils.showToast('个性化信息已保存！请创建对话后使用。');
+        }
+      }
+    };
+    
+    // 选择模板
+    promptTemplates.onchange = function() {
+      const selectedTemplate = promptTemplates.value;
+      if (selectedTemplate && promptTemplateData[selectedTemplate]) {
+        systemPromptForm.systemPrompt.value = promptTemplateData[selectedTemplate];
+      }
+    };
+    
+    // 保存自定义模板
+    const saveCustomPromptBtn = document.getElementById('saveCustomPromptBtn');
+    saveCustomPromptBtn.onclick = function() {
+      const customPrompt = systemPromptForm.systemPrompt.value.trim();
+      if (customPrompt) {
+        localStorage.setItem('customPromptTemplate', customPrompt);
+        promptTemplates.value = "custom";
+        Utils.showToast('自定义模板已保存！');
+      } else {
+        Utils.showToast('请先输入提示词内容');
+      }
+    };
+    
+    // 保存系统提示词
+    systemPromptForm.onsubmit = function(e) {
+      e.preventDefault();
+      
+      const currentChatId = storageManager.getCurrentChatId();
+      if (!currentChatId) {
+        Utils.showToast('请先创建或选择一个对话');
+        return;
+      }
+      
+      const systemPrompt = systemPromptForm.systemPrompt.value.trim();
+      // 如果用户输入为空，则发送null
+      const promptToSend = systemPrompt === "" ? null : systemPrompt;
+      
+      apiClient.setSystemPrompt(storageManager.currentUser, currentChatId, promptToSend)
+        .then(response => {
+          if (response.success) {
+            combinedSettingsModalOverlay.style.display = 'none';
+            Utils.showToast('AI提示词已保存！下一条消息将使用新设置');
+          } else {
+            Utils.showToast('保存失败：' + (response.message || '未知错误'));
+          }
+        })
+        .catch(error => {
+          console.error('保存系统提示词错误:', error);
+          Utils.showToast('保存失败，请稍后重试');
+        });
+    };
+    
+    // 初始化自定义模板
+    if (localStorage.getItem('customPromptTemplate')) {
+      const customOption = document.querySelector('#promptTemplates option[value="custom"]');
+      if (customOption) {
+        customOption.textContent = '自定义模板 (已保存)';
+      }
+    }
+
+    // 记忆管理功能
+    const memoriesList = document.getElementById('memoriesList');
+    const refreshMemoriesBtn = document.getElementById('refreshMemoriesBtn');
+    const clearAllMemoriesBtn = document.getElementById('clearAllMemoriesBtn');
+    const memoryCancelBtn = document.getElementById('memoryCancelBtn');
+    
+    // 格式化时间
+    function formatDate(timestamp) {
+      const date = new Date(timestamp);
+      return date.toLocaleString('zh-CN', { 
+        year: 'numeric', 
+        month: '2-digit', 
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+    //加载记忆列表
+    async function loadMemories() {
+    memoriesList.innerHTML = '<div class="memory-loading"><i class="ri-loader-4-line"></i>加载记忆中...</div>';
+
+    try {
+        const response = await apiClient.getLongTermMemories(20);
+
+        // 1. 修改判断条件，使用新的、正确的路径
+        if (response.success && response.memories && response.memories.results && response.memories.results.results && response.memories.results.results.length > 0) {
+            
+            // 2. 从正确的路径获取记忆数组
+            const memoriesArray = response.memories.results.results;
+            let memoryHtml = '';
+
+            memoriesArray.forEach(memory => {
+                // 3. 根据新的对象结构获取数据
+                const importance = memory.metadata.importance || '未知'; // 从 memory.metadata.importance 获取
+                const importanceClass =
+                    importance === 'high' ? 'high' :
+                    importance === 'medium' ? 'medium' :
+                    importance === 'low' ? 'low' : '';
+
+                const formattedDate = formatDate(memory.created_at); // 使用 memory.created_at
+                
+                const memoryContent = memory.memory || '无内容'; // 使用 memory.memory
+                
+                const memoryId = memory.id; // 使用 memory.id
+
+                // 【安全】对要插入HTML的内容进行转义
+                function sanitizeHTML(str) {
+                    const temp = document.createElement('div');
+                    temp.textContent = str;
+                    return temp.innerHTML;
+                }
+                const sanitizedContent = sanitizeHTML(memoryContent);
+
+                memoryHtml += `
+              <div class="memory-item" data-id="${memoryId}">
+                <div class="memory-content">${sanitizedContent}</div>
+                <div class="memory-metadata">
+                  <span>创建于: ${formattedDate}</span>
+                  <span class="memory-importance ${importanceClass}">
+                    <i class="ri-star-${
+                      importance === 'high' ? 'fill' : 
+                      importance === 'medium' ? 'half-line' : 
+                      'line'
+                    }"></i>
+                    ${
+                    importance === 'high' ? '重要' : 
+                    importance === 'medium' ? '中等' : 
+                    importance === 'low' ? '一般' : '未知'
+                  }</span>
+                </div>
+                <div class="memory-actions">
+                  <button class="memory-btn edit" title="编辑记忆">
+                    <i class="ri-edit-line"></i> 编辑
+                  </button>
+                  <button class="memory-btn delete" title="删除记忆">
+                    <i class="ri-delete-bin-line"></i> 删除
+                  </button>
+                </div>
+                <div class="memory-edit-form">
+                  <textarea class="memory-edit-textarea">${memoryContent}</textarea>
+                  <div class="form-actions">
+                    <button class="cancel-btn"><i class="ri-close-line"></i> 取消</button>
+                    <button class="save-btn"><i class="ri-check-line"></i> 保存</button>
+                  </div>
+                </div>
+              </div>
+            `;
+            });
+
+            memoriesList.innerHTML = memoryHtml;
+
+            // 事件监听部分保持不变
+            document.querySelectorAll('.memory-btn.edit').forEach(btn => {
+                btn.addEventListener('click', handleEditMemory);
+            });
+            document.querySelectorAll('.memory-btn.delete').forEach(btn => {
+                btn.addEventListener('click', handleDeleteMemory);
+            });
+            document.querySelectorAll('.memory-edit-form .cancel-btn').forEach(btn => {
+                btn.addEventListener('click', handleCancelEdit);
+            });
+            document.querySelectorAll('.memory-edit-form .save-btn').forEach(btn => {
+                btn.addEventListener('click', handleSaveEdit);
+            });
+
+        } else {
+            memoriesList.innerHTML = '<div class="memory-empty"><i class="ri-ghost-line"></i><span>没有找到任何长期记忆</span></div>';
+        }
+    } catch (error) {
+        console.error('加载记忆错误:', error);
+        memoriesList.innerHTML = `<div class="memory-empty"><i class="ri-error-warning-line"></i><span>加载记忆时出错: ${error.message || '未知错误'}</span></div>`;
+    }
+}
+    
+    // 处理编辑记忆
+    function handleEditMemory(e) {
+      const memoryItem = e.currentTarget.closest('.memory-item');
+      const editForm = memoryItem.querySelector('.memory-edit-form');
+      editForm.style.display = 'block';
+    }
+    
+    // 处理取消编辑
+    function handleCancelEdit(e) {
+      const memoryItem = e.currentTarget.closest('.memory-item');
+      const editForm = memoryItem.querySelector('.memory-edit-form');
+      const textarea = editForm.querySelector('textarea');
+      const content = memoryItem.querySelector('.memory-content');
+      
+      // 恢复原内容
+      textarea.value = content.textContent;
+      editForm.style.display = 'none';
+    }
+    
+    // 处理保存编辑
+    async function handleSaveEdit(e) {
+      const memoryItem = e.currentTarget.closest('.memory-item');
+      const memoryId = memoryItem.dataset.id;
+      const editForm = memoryItem.querySelector('.memory-edit-form');
+      const textarea = editForm.querySelector('textarea');
+      const content = memoryItem.querySelector('.memory-content');
+      
+      const newText = textarea.value.trim();
+      
+      if (!newText) {
+        Utils.showToast('记忆内容不能为空');
+        return;
+      }
+      
+      try {
+        const response = await apiClient.updateLongTermMemory(memoryId, newText);
+        
+        if (response.success) {
+          content.textContent = newText;
+          editForm.style.display = 'none';
+          Utils.showToast('记忆已更新');
+        } else {
+          Utils.showToast('更新失败: ' + (response.message || '未知错误'));
+        }
+      } catch (error) {
+        console.error('更新记忆错误:', error);
+        Utils.showToast('更新失败，请稍后重试');
+      }
+    }
+    
+    // 处理删除记忆
+    async function handleDeleteMemory(e) {
+      if (!confirm('确定要删除这条记忆吗？此操作不可撤销。')) {
+        return;
+      }
+      
+      const memoryItem = e.currentTarget.closest('.memory-item');
+      const memoryId = memoryItem.dataset.id;
+      
+      try {
+        const response = await apiClient.deleteLongTermMemory(memoryId);
+        
+        if (response.success) {
+          memoryItem.remove();
+          Utils.showToast('记忆已删除');
+          
+          // 检查是否还有记忆
+          if (memoriesList.children.length === 0) {
+            memoriesList.innerHTML = '<div class="memory-empty"><i class="ri-ghost-line"></i><span>没有找到任何长期记忆</span></div>';
+          }
+        } else {
+          Utils.showToast('删除失败: ' + (response.message || '未知错误'));
+        }
+      } catch (error) {
+        console.error('删除记忆错误:', error);
+        Utils.showToast('删除失败，请稍后重试');
+      }
+    }
+    
+    // 刷新记忆列表
+    refreshMemoriesBtn.addEventListener('click', loadMemories);
+    
+    // 清除所有记忆
+    clearAllMemoriesBtn.addEventListener('click', async function() {
+      if (!confirm('确定要清除所有长期记忆吗？此操作不可撤销。')) {
+        return;
+      }
+      
+      try {
+        const response = await apiClient.clearLongTermMemories();
+        
+        if (response.success) {
+          memoriesList.innerHTML = '<div class="memory-empty"><i class="ri-ghost-line"></i><span>没有找到任何长期记忆</span></div>';
+          Utils.showToast('所有记忆已清除');
+        } else {
+          Utils.showToast('清除失败: ' + (response.message || '未知错误'));
+        }
+      } catch (error) {
+        console.error('清除记忆错误:', error);
+        Utils.showToast('清除失败，请稍后重试');
+      }
+    });
+    
+    // 关闭记忆管理面板
+    memoryCancelBtn.addEventListener('click', function() {
+      combinedSettingsModalOverlay.style.display = 'none';
+    });
+    
+    // 加载记忆设置面板时自动加载记忆列表
+    document.querySelector('.settings-option[data-target="memorySettings"]').addEventListener('click', loadMemories);
+
+    // 新建对话按钮（mini菜单）
+    document.getElementById('miniNewChatBtn').onclick = function() {
+      document.getElementById('newChatBtn').click();
+    };
+    
+    // AI头像点击（mini菜单）可自定义
+    document.getElementById('miniAiIcon').onclick = function() {
+      sidebar.classList.add('expanded');
+    };
+    
+    // 预设模板
+    const promptTemplateData = {
+      professional: "你是一位经验丰富的专业顾问。\n请用清晰、准确和专业的语言回答问题。\n提供深入的分析和建议，但确保信息的准确性。\n如有需要，请提出进一步的问题以澄清用户的需求。",
+      creative: "你是一位充满创意的伙伴。\n请用生动、有趣和富有想象力的方式回答问题。\n鼓励创新思维和不同寻常的视角。\n可以使用比喻、故事和幽默来表达你的想法。",
+      teacher: "你是一位耐心的教育导师。\n请用简明易懂的语言解释复杂的概念。\n将信息分解成易于理解的部分，并提供相关的例子。\n鼓励学习和好奇心，并回答跟进问题。",
+      friend: "你是用户的一位亲密朋友。\n用轻松、友好和随意的语气交流。\n表现出同理心和理解，就像你们已经认识很久一样。\n可以分享个人见解和幽默，但保持尊重和支持。",
+      get custom() {
+        return localStorage.getItem('customPromptTemplate') || "这是您的自定义模板。\n您可以根据自己的需求定制AI的行为方式。\n点击'保存为自定义模板'按钮将当前文本保存为自定义模板。";
+      }
+    };
+  });
+  </script>
+</body>
+</html>
