@@ -9,7 +9,10 @@ StarPal - AI Intelligent Chat Assistant Based on Long-Term Memory
 
 该助手可广泛服务于需要情感陪伴的年轻群体、独居人士、高压职场人等，通过持续的智能交互，填补情感陪伴缺口。同时，其技术架构可扩展至教育、心理健康等领域，为合作伙伴提供定制化陪伴解决方案，推动 AI 技术在情感交互场景的深度落地，真正实现 “让陪伴更懂你” 的核心价值。
 
-🚀 项目部署与运行指南
+<img width="975" height="1139" alt="image" src="https://github.com/user-attachments/assets/00366a31-eeaf-475b-a5f1-8a3d20a6921f" />
+
+
+二.🚀 项目部署与运行指南
 本项目基于 MySQL + 大模型 API，通过简单的配置即可快速启动并使用。请按照以下步骤完成环境配置与运行。
 📁 一、打开项目
 
@@ -23,12 +26,14 @@ cd your_project_directory
 
 打开项目中的配置文件（如 config.py / .env / settings.yaml，以项目实际为准），修改数据库相关配置项：
 
+
 DB_TYPE=mysql
 DB_HOST=127.0.0.1        # 数据库服务器地址
 DB_PORT=3306             # MySQL 默认端口
 DB_NAME=your_database    # 数据库名
 DB_USER=your_username    # MySQL 用户名
 DB_PASSWORD=your_password # MySQL 密码
+
 
 
 📌 注意事项
