@@ -18,9 +18,9 @@ StarPal - AI Intelligent Chat Assistant Based on Long-Term Memory
 
 # 克隆或进入项目目录
 
-'''python
+```python
 cd your_project_directory
-'''
+```
 
 确保已成功打开项目根目录。
 
@@ -28,14 +28,20 @@ cd your_project_directory
 
 打开项目中的配置文件（如 config.py / .env / settings.yaml，以项目实际为准），修改数据库相关配置项：
 
-'''python
+```python
 DB_TYPE=mysql
+
 DB_HOST=127.0.0.1        # 数据库服务器地址
+
 DB_PORT=3306             # MySQL 默认端口
+
 DB_NAME=your_database    # 数据库名
+
 DB_USER=your_username    # MySQL 用户名
+
 DB_PASSWORD=your_password # MySQL 密码
-'''
+
+```python
 
 
 📌 注意事项
@@ -47,7 +53,7 @@ DB_PASSWORD=your_password # MySQL 密码
 🧠 三、MEM0 与大模型 API 配置
 
 继续在配置文件中修改以下内容：
-'''python
+```python
 # MEM0 配置
 MEM0_API_KEY=your_mem0_api_key
 
@@ -56,7 +62,7 @@ DASHSCOPE_API_KEY=your_dashscope_api_key
 
 # 大模型 API 地址
 AI_API_BASE=https://your-llm-api-base-url
-'''
+```
 
 🔑 密钥获取说明
 
@@ -69,7 +75,7 @@ DASHSCOPE_API_KEY：在 阿里云 DashScope 控制台 获取
 🐍 四、环境配置
 
 1️⃣ 创建虚拟环境（推荐）
-'''python
+```python
 # 创建虚拟环境
 python -m venv venv
 
@@ -79,20 +85,20 @@ venv\Scripts\activate
 
 # macOS / Linux
 source venv/bin/activate
-'''
+```
 
 2️⃣ 安装依赖
 
 进入项目根目录后执行：
-'''python
+```python
 pip install -r requirements.txt
-'''
+```
 
 ▶️ 五、运行项目
 启动后端服务
-'''python
+```python
 python app.py
-'''
+```
 
 
 确保控制台未报错，服务成功启动。
