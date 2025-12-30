@@ -12,8 +12,10 @@ StarPal - AI Intelligent Chat Assistant Based on Long-Term Memory
 <img width="975" height="1139" alt="image" src="https://github.com/user-attachments/assets/00366a31-eeaf-475b-a5f1-8a3d20a6921f" />
 
 
-二.🚀 项目部署与运行指南
+🚀 项目部署与运行指南
 本项目基于 MySQL + 大模型 API，通过简单的配置即可快速启动并使用。请按照以下步骤完成环境配置与运行。
+
+
 📁 一、打开项目
 
 # 克隆或进入项目目录
