@@ -1,6 +1,8 @@
 # Starpal
 StarPal - AI Intelligent Chat Assistant Based on Long-Term Memory
+
 详细项目地址：https://github.com/POSE200/Starpal
+
 一、项目简介
 
 在快节奏的现代社会中，人们对情感陪伴的需求日益凸显，却常面临社交时间碎片化、情感支持不及时等问题。当前市场上的聊天工具多局限于单次对话响应，缺乏对用户长期需求的深度理解，情感交互生硬、个性化不足，难以提供持续、贴心的陪伴体验。
