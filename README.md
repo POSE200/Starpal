@@ -41,7 +41,7 @@ DB_USER=your_username    # MySQL 用户名
 
 DB_PASSWORD=your_password # MySQL 密码
 
-```python
+```
 
 
 📌 注意事项
